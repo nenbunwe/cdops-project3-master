@@ -1,0 +1,35 @@
+- name: update apt package
+  become: true
+  apt:
+    update_cache: true
+
+- name: remove unnecessary deps
+  become: true
+  apt:
+    autoremove: true
+
+- name: upgrade packages
+  become: true
+  apt:
+    upgrade: true
+
+- name: install python.
+  become: true
+  apt:
+    name: ["python3"]
+    state: latest
+
+- name: install nodejs
+  become: yes
+  apt:
+    name: ["nodejs", "npm"]
+    state: latest
+    update_cache: yes
+
+- name: install pm2
+  become: yes
+  npm:
+    name: "pm2"
+    state: present
+    global: yes
+    production: yes

@@ -1,0 +1,52 @@
+- name: creates directory
+  file:
+    path: /home/ubuntu/udapeople
+    state: directory
+
+- name: "extract backend artifact."
+  become: true
+  unarchive:
+    src: ~/project/artifact.tar.gz
+    dest: /home/ubuntu/udapeople
+
+# - name: update apt package
+#   become: true
+#   apt:
+#     update_cache: true
+
+# - name: remove unnecessary deps
+#   become: true
+#   apt:
+#     autoremove: true
+
+# - name: upgrade packages
+#   become: true
+#   apt:
+#     upgrade: true
+
+# - name: install python.
+#   become: true
+#   apt:
+#     name: ["python3"]
+#     state: latest
+
+# - name: install nodejs
+#   become: true
+#   apt:
+#     name: ["nodejs", "npm"]
+#     state: latest
+
+# - name: install pm2
+#   become: true
+#   npm:
+#     name: "pm2"
+#     state: present
+#     global: true
+#     production: true
+
+- name: start server
+  shell: |
+    cd /home/ubuntu/udapeople
+    npm install
+    pm2 stop default
+    pm2 start npm -- start
