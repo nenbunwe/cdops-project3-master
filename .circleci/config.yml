@@ -115,39 +115,39 @@ jobs:
           event: fail
           template: basic_fail_1
 
-  # test-frontend:
-  #   <<: *docker_node
-  #   steps:
-  #     - checkout
-  #     - restore_cache:
-  #         keys: [frontend-deps]
-  #     - run:
-  #         name: test frontend
-  #         command: |
-  #           cd frontend
-  #           npm install
-  #           npm run test
-  #     - slack/notify:
-  #         mentions: "@goltokka"
-  #         event: fail
-  #         template: basic_fail_1
+  test-frontend:
+    <<: *docker_node
+    steps:
+      - checkout
+      - restore_cache:
+          keys: [frontend-deps]
+      - run:
+          name: test frontend
+          command: |
+            cd frontend
+            npm install
+            npm run test
+      - slack/notify:
+          mentions: "@goltokka"
+          event: fail
+          template: basic_fail_1
 
-  # test-backend:
-  #   <<: *docker_node
-  #   steps:
-  #     - checkout
-  #     - restore_cache:
-  #         keys: [backend_deps]
-  #     - run:
-  #         name: test backend
-  #         command: |
-  #           cd backend
-  #           npm install
-  #           npm run test
-  #     - slack/notify:
-  #         mentions: "@goltokka"
-  #         event: fail
-  #         template: basic_fail_1
+  test-backend:
+    <<: *docker_node
+    steps:
+      - checkout
+      - restore_cache:
+          keys: [backend_deps]
+      - run:
+          name: test backend
+          command: |
+            cd backend
+            npm install
+            npm run test
+      - slack/notify:
+          mentions: "@goltokka"
+          event: fail
+          template: basic_fail_1
 
   # scan-frontend:
   #   <<: *docker_node
@@ -436,10 +436,10 @@ workflows:
     jobs:
       - build-frontend
       - build-backend
-      # - test-frontend:
-      #     requires: [build-frontend]
-      # - test-backend:
-      #     requires: [build-backend]
+      - test-frontend:
+          requires: [build-frontend]
+      - test-backend:
+          requires: [build-backend]
       # - scan-frontend:
       #     requires: [build-frontend]
       # - scan-backend:
