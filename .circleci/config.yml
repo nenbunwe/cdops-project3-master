@@ -161,7 +161,7 @@ jobs:
             cd frontend
             npm i --package-lock-only
             npm audit fix --audit-level=critical --force
-            npm audit --audit-level critical
+            npm audit --audit-level=critical
       - slack/notify:
           mentions: "@goltokka"
           event: fail
@@ -179,7 +179,7 @@ jobs:
             cd backend
             npm i --package-lock-only
             npm audit fix --audit-level=critical --force
-            npm audit
+            npm audit --audit-level=critical 
       - slack/notify:
           mentions: "@goltokka"
           event: fail
