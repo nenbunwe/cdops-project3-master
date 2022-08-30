@@ -149,41 +149,40 @@ jobs:
           event: fail
           template: basic_fail_1
 
-  # scan-frontend:
-  #   <<: *docker_node
-  #   steps:
-  #     - checkout
-  #     - restore_cache:
-  #         keys: [backend_deps]
-  #     - run:
-  #         name: scan frontend for vunerebility
-  #         command: |
-  #           cd frontend
-  #           npm i --package-lock-only
-  #           npm audit fix --audit-level=critical --force
-  #           npm audit --audit-level critical
-  #     - slack/notify:
-  #         mentions: "@goltokka"
-  #         event: fail
-  #         template: basic_fail_1
+  scan-frontend:
+    <<: *docker_node
+    steps:
+      - checkout
+      - restore_cache:
+          keys: [backend_deps]
+      - run:
+          name: scan frontend for vunerebility
+          command: |
+            cd frontend
+            npm install
+            
+            npm audit --audit-level=critical
+      - slack/notify:
+          mentions: "@goltokka"
+          event: fail
+          template: basic_fail_1
 
-  # scan-backend:
-  #   <<: *docker_node
-  #   steps:
-  #     - checkout
-  #     - restore_cache:
-  #         keys: [backend_deps]
-  #     - run:
-  #         name: scan backend for vunerebility
-  #         command: |
-  #           cd backend
-  #           # npm i --package-lock-only
-  #           # npm audit fix --audit-level=critical --force
-  #           # npm audit
-  #     - slack/notify:
-  #         mentions: "@goltokka"
-  #         event: fail
-  #         template: basic_fail_1f
+  scan-backend:
+    <<: *docker_node
+    steps:
+      - checkout
+      - restore_cache:
+          keys: [backend_deps]
+      - run:
+          name: scan backend for vunerebility
+          command: |
+            cd backend
+            npm install
+            npm audit --audit-level=critical
+      - slack/notify:
+          mentions: "@goltokka"
+          event: fail
+          template: basic_fail_1f
 
   # deploy-infrastructure:
   #   docker:
@@ -440,10 +439,10 @@ workflows:
           requires: [build-frontend]
       - test-backend:
           requires: [build-backend]
-      # - scan-frontend:
-      #     requires: [build-frontend]
-      # - scan-backend:
-      #     requires: [build-backend]
+      - scan-frontend:
+          requires: [build-frontend]
+      - scan-backend:
+          requires: [build-backend]
       # - deploy-infrastructure:
       #     requires: [test-frontend, test-backend, scan-frontend, scan-backend]
       #     filters:
