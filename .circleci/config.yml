@@ -159,9 +159,9 @@ jobs:
           name: scan frontend for vunerebility
           command: |
             cd frontend
-            npm install
-            
-            npm audit --audit-level=critical
+            npm i --package-lock-only
+            npm audit fix --audit-level=critical --force
+            npm audit --audit-level critical
       - slack/notify:
           mentions: "@goltokka"
           event: fail
@@ -177,8 +177,9 @@ jobs:
           name: scan backend for vunerebility
           command: |
             cd backend
-            npm install
-            npm audit --audit-level=critical
+            npm i --package-lock-only
+            npm audit fix --audit-level=critical --force
+            npm audit
       - slack/notify:
           mentions: "@goltokka"
           event: fail
