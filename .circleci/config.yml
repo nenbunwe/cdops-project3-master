@@ -183,7 +183,7 @@ jobs:
             npm audit --audit-level=critical 
       - slack/notify:
           mentions: "@nenbunwe"
-          event: fail
+          event: on_fail
           template: basic_fail_1f
 
   # deploy-infrastructure:
