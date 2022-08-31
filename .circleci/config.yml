@@ -431,18 +431,18 @@ jobs:
   #           fi
   #     - revert-migrations
   #     - destroy-envs
-  deploy:
-    executor:
-      name: node/default
-    steps:
-      - checkout
-      - node/install-packages
-      - run:
-          command: npm run deploy
-      - slack/notify:
-          channel: A04129UBS1E
-          event: fail
-          template: basic_fail_1
+  # deploy:
+  #   executor:
+  #     name: node/default
+  #   steps:
+  #     - checkout
+  #     - node/install-packages
+  #     - run:
+  #         command: npm run deploy
+  #     - slack/notify:
+  #         channel: A04129UBS1E
+  #         event: fail
+  #         template: basic_fail_1
 
 workflows:
   default:
@@ -478,6 +478,6 @@ workflows:
       #     requires: [smoke-test]
       # - cleanup:
       #     requires: [cloudfront-update]
-      - deploy:
-         context: slack-secrets
+      # - deploy:
+      #    context: slack-secrets
 
