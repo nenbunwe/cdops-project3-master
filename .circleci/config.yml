@@ -5,6 +5,7 @@ docker_anchor: &docker_node
     - image: cimg/node:13.8.0
 
 orbs:
+  node: 'circleci/node:4.1'
   slack: circleci/slack@4.10.1
 
 commands:
@@ -91,7 +92,7 @@ jobs:
           paths: [frontend/node_modules]
           key: frontend-deps
       - slack/notify:
-          mentions: "@goltokka"
+          mentions: "@nenbunwe"
           event: fail
           template: basic_fail_1
 
@@ -111,7 +112,7 @@ jobs:
           paths: [backend/node_modules]
           key: backend_deps
       - slack/notify:
-          mentions: "@goltokka"
+          mentions: "@nenbunwe"
           event: fail
           template: basic_fail_1
 
@@ -128,7 +129,7 @@ jobs:
             npm install
             npm run test
       - slack/notify:
-          mentions: "@goltokka"
+          mentions: "@nenbunwe"
           event: fail
           template: basic_fail_1
 
@@ -145,7 +146,7 @@ jobs:
             npm install
             npm run test
       - slack/notify:
-          mentions: "@goltokka"
+          mentions: "@nenbunwe"
           event: fail
           template: basic_fail_1
 
@@ -163,7 +164,7 @@ jobs:
             npm audit fix --audit-level=critical --force
             npm audit --audit-level=critical
       - slack/notify:
-          mentions: "@goltokka"
+          mentions: "@nenbunwe"
           event: fail
           template: basic_fail_1
 
@@ -181,7 +182,7 @@ jobs:
             npm audit fix --audit-level=critical --force
             npm audit --audit-level=critical 
       - slack/notify:
-          mentions: "@goltokka"
+          mentions: "@nenbunwe"
           event: fail
           template: basic_fail_1f
 
@@ -430,6 +431,18 @@ jobs:
   #           fi
   #     - revert-migrations
   #     - destroy-envs
+  deploy:
+    executor:
+      name: node/default
+    steps:
+      - checkout
+      - node/install-packages
+      - run:
+          command: npm run deploy
+      - slack/notify:
+          channel: A04129UBS1E
+          event: fail
+          template: basic_fail_1
 
 workflows:
   default:
@@ -465,3 +478,6 @@ workflows:
       #     requires: [smoke-test]
       # - cleanup:
       #     requires: [cloudfront-update]
+      - deploy:
+         context: slack-secrets
+
