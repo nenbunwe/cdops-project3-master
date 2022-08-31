@@ -76,176 +76,176 @@ commands:
             fi
 
 jobs:
-  build-frontend:
-    <<: *docker_node
-    steps:
-      - checkout
-      - restore_cache:
-          keys: [frontend-deps]
-      - run:
-          name: Build front-end
-          command: |
-            cd frontend
-            npm install
-            npm run build
-      - save_cache:
-          paths: [frontend/node_modules]
-          key: frontend-deps
-      - slack/notify:
-          mentions: "@nenbunwe"
-          event: fail
-          template: basic_fail_1
+  # build-frontend:
+  #   <<: *docker_node
+  #   steps:
+  #     - checkout
+  #     - restore_cache:
+  #         keys: [frontend-deps]
+  #     - run:
+  #         name: Build front-end
+  #         command: |
+  #           cd frontend
+  #           npm install
+  #           npm run build
+  #     - save_cache:
+  #         paths: [frontend/node_modules]
+  #         key: frontend-deps
+  #     - slack/notify:
+  #         mentions: "@nenbunwe"
+  #         event: fail
+  #         template: basic_fail_1
 
-  build-backend:
-    <<: *docker_node
-    steps:
-      - checkout
-      - restore_cache:
-          keys: [backend_deps]
-      - run:
-          name: Back-end build
-          command: |
-            cd backend
-            npm install
-            npm run build
-      - save_cache:
-          paths: [backend/node_modules]
-          key: backend_deps
-      - slack/notify:
-          mentions: "@nenbunwe"
-          event: fail
-          template: basic_fail_1
+  # build-backend:
+  #   <<: *docker_node
+  #   steps:
+  #     - checkout
+  #     - restore_cache:
+  #         keys: [backend_deps]
+  #     - run:
+  #         name: Back-end build
+  #         command: |
+  #           cd backend
+  #           npm install
+  #           npm run build
+  #     - save_cache:
+  #         paths: [backend/node_modules]
+  #         key: backend_deps
+  #     - slack/notify:
+  #         mentions: "@nenbunwe"
+  #         event: fail
+  #         template: basic_fail_1
 
-  test-frontend:
-    <<: *docker_node
-    steps:
-      - checkout
-      - restore_cache:
-          keys: [frontend-deps]
-      - run:
-          name: test frontend
-          command: |
-            cd frontend
-            npm install
-            npm run test
-      - slack/notify:
-          mentions: "@nenbunwe"
-          event: fail
-          template: basic_fail_1
+  # test-frontend:
+  #   <<: *docker_node
+  #   steps:
+  #     - checkout
+  #     - restore_cache:
+  #         keys: [frontend-deps]
+  #     - run:
+  #         name: test frontend
+  #         command: |
+  #           cd frontend
+  #           npm install
+  #           npm run test
+  #     - slack/notify:
+  #         mentions: "@nenbunwe"
+  #         event: fail
+  #         template: basic_fail_1
 
-  test-backend:
-    <<: *docker_node
-    steps:
-      - checkout
-      - restore_cache:
-          keys: [backend_deps]
-      - run:
-          name: test backend
-          command: |
-            cd backend
-            npm install
-            npm run test
-      - slack/notify:
-          mentions: "@nenbunwe"
-          event: fail
-          template: basic_fail_1
+  # test-backend:
+  #   <<: *docker_node
+  #   steps:
+  #     - checkout
+  #     - restore_cache:
+  #         keys: [backend_deps]
+  #     - run:
+  #         name: test backend
+  #         command: |
+  #           cd backend
+  #           npm install
+  #           npm run test
+  #     - slack/notify:
+  #         mentions: "@nenbunwe"
+  #         event: fail
+  #         template: basic_fail_1
 
-  scan-frontend:
-    <<: *docker_node
-    steps:
-      - checkout
-      - restore_cache:
-          keys: [backend_deps]
-      - run:
-          name: scan frontend for vunerebility
-          command: |
-            cd frontend
-            npm i --package-lock-only
-            npm audit fix --audit-level=critical --force
-            npm audit --audit-level=critical
-      - slack/notify:
-          mentions: "@nenbunwe"
-          event: fail
-          template: basic_fail_1
+  # scan-frontend:
+  #   <<: *docker_node
+  #   steps:
+  #     - checkout
+  #     - restore_cache:
+  #         keys: [backend_deps]
+  #     - run:
+  #         name: scan frontend for vunerebility
+  #         command: |
+  #           cd frontend
+  #           npm i --package-lock-only
+  #           npm audit fix --audit-level=critical --force
+  #           npm audit --audit-level=critical
+  #     - slack/notify:
+  #         mentions: "@nenbunwe"
+  #         event: fail
+  #         template: basic_fail_1
 
-  scan-backend:
-    <<: *docker_node
-    steps:
-      - checkout
-      - restore_cache:
-          keys: [backend_deps]
-      - run:
-          name: scan backend for vunerebility
-          command: |
-            cd backend
-            npm i --package-lock-only
-            npm audit fix
-            npm audit fix --audit-level=critical --force
-            npm audit --audit-level=critical 
-      - slack/notify:
-          mentions: "@nenbunwe"
-          event: fail
-          template: basic_fail_1
+  # scan-backend:
+  #   <<: *docker_node
+  #   steps:
+  #     - checkout
+  #     - restore_cache:
+  #         keys: [backend_deps]
+  #     - run:
+  #         name: scan backend for vunerebility
+  #         command: |
+  #           cd backend
+  #           npm i --package-lock-only
+  #           npm audit fix
+  #           npm audit fix --audit-level=critical --force
+  #           npm audit --audit-level=critical 
+  #     - slack/notify:
+  #         mentions: "@nenbunwe"
+  #         event: fail
+  #         template: basic_fail_1
 
-  deploy-infrastructure:
-    docker:
-      - image: amazon/aws-cli:latest
-    steps:
-      - checkout
-      - run:
-          name: Install tar utility
-          command: |
-            yum install -y tar gzip
-      - run:
-          name: Ensure back-end infra exists
-          command: |
-            aws cloudformation deploy \
-              --template-file .circleci/files/backend.yml \
-              --tags project=udapeople \
-              --stack-name "udapeople-backendinfra-${CIRCLE_WORKFLOW_ID:0:7}" \
-              --parameter-overrides ID=${CIRCLE_WORKFLOW_ID:0:7}
+  # deploy-infrastructure:
+  #   docker:
+  #     - image: amazon/aws-cli:latest
+  #   steps:
+  #     - checkout
+  #     - run:
+  #         name: Install tar utility
+  #         command: |
+  #           yum install -y tar gzip
+  #     - run:
+  #         name: Ensure back-end infra exists
+  #         command: |
+  #           aws cloudformation deploy \
+  #             --template-file .circleci/files/backend.yml \
+  #             --tags project=udapeople \
+  #             --stack-name "udapeople-backendinfra-${CIRCLE_WORKFLOW_ID:0:7}" \
+  #             --parameter-overrides ID=${CIRCLE_WORKFLOW_ID:0:7}
 
-      - run:
-          name: Ensure front-end infra exists
-          command: |
-            aws cloudformation deploy \
-              --template-file .circleci/files/frontend.yml \
-              --tags project=udapeople \
-              --stack-name "udapeople-frontendinfra-${CIRCLE_WORKFLOW_ID:0:7}" \
-              --parameter-overrides ID=${CIRCLE_WORKFLOW_ID:0:7}
+  #     - run:
+  #         name: Ensure front-end infra exists
+  #         command: |
+  #           aws cloudformation deploy \
+  #             --template-file .circleci/files/frontend.yml \
+  #             --tags project=udapeople \
+  #             --stack-name "udapeople-frontendinfra-${CIRCLE_WORKFLOW_ID:0:7}" \
+  #             --parameter-overrides ID=${CIRCLE_WORKFLOW_ID:0:7}
 
-      - run:
-          name: Add back-end ip to ansible inventory
-          command: |
-            echo "[web]" > .circleci/ansible/inventory.txt
-            aws ec2 describe-instances \
-              --query "Reservations[*].Instances[*].PublicIpAddress" \
-              --output=text >> .circleci/ansible/inventory.txt
+  #     - run:
+  #         name: Add back-end ip to ansible inventory
+  #         command: |
+  #           echo "[web]" > .circleci/ansible/inventory.txt
+  #           aws ec2 describe-instances \
+  #             --query "Reservations[*].Instances[*].PublicIpAddress" \
+  #             --output=text >> .circleci/ansible/inventory.txt
 
-      - persist_to_workspace:
-          root: ~/
-          paths:
-            - project/.circleci/ansible/inventory.txt
-      - destroy-envs
+  #     - persist_to_workspace:
+  #         root: ~/
+  #         paths:
+  #           - project/.circleci/ansible/inventory.txt
+  #     - destroy-envs
 
-  configure-infrastructure:
-    <<: *docker_node
-    steps:
-      - checkout
-      - install-python
-      - install-ansible
-      - install-aws
-      - add_ssh_keys:
-          fingerprints:
-            - "c5:95:b7:9b:1c:99:34:87:c5:7c:f2:2c:37:3e:d9:45"
-      - attach_workspace:
-          at: ~/
-      - run:
-          name: Install dependencies
-          command: |
-            cd .circleci/ansible
-            ansible-playbook -i inventory.txt configure-server.yml
-      - destroy-envs
+  # configure-infrastructure:
+  #   <<: *docker_node
+  #   steps:
+  #     - checkout
+  #     - install-python
+  #     - install-ansible
+  #     - install-aws
+  #     - add_ssh_keys:
+  #         fingerprints:
+  #           - "c5:95:b7:9b:1c:99:34:87:c5:7c:f2:2c:37:3e:d9:45"
+  #     - attach_workspace:
+  #         at: ~/
+  #     - run:
+  #         name: Install dependencies
+  #         command: |
+  #           cd .circleci/ansible
+  #           ansible-playbook -i inventory.txt configure-server.yml
+  #     - destroy-envs
 
   run-migrations:
     <<: *docker_node
@@ -448,25 +448,26 @@ jobs:
 workflows:
   default:
     jobs:
-      - build-frontend
-      - build-backend
-      - test-frontend:
-          requires: [build-frontend]
-      - test-backend:
-          requires: [build-backend]
-      - scan-frontend:
-          requires: [build-frontend]
-      - scan-backend:
-          requires: [build-backend]
-      - deploy-infrastructure:
-          requires: [test-frontend, test-backend, scan-frontend, scan-backend]
-          filters:
-            branches:
-              only: [master]
-      - configure-infrastructure:
-          requires: [deploy-infrastructure]
-      - run-migrations:
-          requires: [configure-infrastructure]
+      # - build-frontend
+      # - build-backend
+      # - test-frontend:
+      #     requires: [build-frontend]
+      # - test-backend:
+      #     requires: [build-backend]
+      # - scan-frontend:
+      #     requires: [build-frontend]
+      # - scan-backend:
+      #     requires: [build-backend]
+      # - deploy-infrastructure:
+      #     requires: [test-frontend, test-backend, scan-frontend, scan-backend]
+      #     filters:
+      #       branches:
+      #         only: [master]
+      # - configure-infrastructure:
+      #     requires: [deploy-infrastructure]
+      # - run-migrations:
+      #     requires: [configure-infrastructure]
+      - run-migrations
       - deploy-frontend:
           requires: [run-migrations]
       - deploy-backend:
